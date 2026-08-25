@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 import pickle
+from rank_bm25 import BM25Okapi
 
 DOCS_FOLDER = "documents"
 INDEX_FOLDER = "rag/vectorstore"
@@ -56,6 +57,13 @@ def main():
     dimension = embeddings.shape[1]
     index = faiss.IndexFlatL2(dimension)
     index.add(embeddings)
+
+    print("Building BM25 index...")
+    tokenized_chunks = [chunk.lower().split() for chunk in all_chunks]
+    bm25 = BM25Okapi(tokenized_chunks)
+
+    with open(os.path.join(INDEX_FOLDER, "bm25.pkl"), "wb") as f:
+        pickle.dump(bm25, f)
 
     os.makedirs(INDEX_FOLDER, exist_ok=True)
     faiss.write_index(index, os.path.join(INDEX_FOLDER, "index.faiss"))

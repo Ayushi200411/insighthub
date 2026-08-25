@@ -1,4 +1,4 @@
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer, CrossEncoder
 import faiss
 import pickle
 import numpy as np
@@ -10,21 +10,45 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 INDEX_FOLDER = "rag/vectorstore"
-TOP_K = 3  # how many chunks to retrieve per question
+VECTOR_TOP_K = 10   # candidates from vector search
+BM25_TOP_K = 10      # candidates from keyword search
+FINAL_TOP_K = 3      # final chunks after re-ranking
 
 def load_index():
     index = faiss.read_index(os.path.join(INDEX_FOLDER, "index.faiss"))
     with open(os.path.join(INDEX_FOLDER, "chunks.pkl"), "rb") as f:
         data = pickle.load(f)
-    return index, data["chunks"], data["sources"]
+    with open(os.path.join(INDEX_FOLDER, "bm25.pkl"), "rb") as f:
+        bm25 = pickle.load(f)
+    return index, data["chunks"], data["sources"], bm25
 
-def retrieve(query, model, index, chunks, sources, k=TOP_K):
-    query_embedding = model.encode([query]).astype("float32")
-    distances, indices = index.search(query_embedding, k)
-    results = []
-    for idx in indices[0]:
-        results.append({"text": chunks[idx], "source": sources[idx]})
-    return results
+def hybrid_retrieve(query, embed_model, index, chunks, sources, bm25):
+    # Vector search
+    query_embedding = embed_model.encode([query]).astype("float32")
+    _, vector_indices = index.search(query_embedding, VECTOR_TOP_K)
+    vector_candidates = set(vector_indices[0])
+
+    # BM25 keyword search
+    tokenized_query = query.lower().split()
+    bm25_scores = bm25.get_scores(tokenized_query)
+    bm25_top_indices = np.argsort(bm25_scores)[::-1][:BM25_TOP_K]
+    bm25_candidates = set(bm25_top_indices)
+
+    # Combine (union of both methods' results)
+    combined_indices = list(vector_candidates | bm25_candidates)
+
+    candidates = [{"text": chunks[i], "source": sources[i], "idx": i} for i in combined_indices]
+    return candidates
+
+def rerank(query, candidates, cross_encoder, top_k=FINAL_TOP_K):
+    pairs = [[query, c["text"]] for c in candidates]
+    scores = cross_encoder.predict(pairs)
+
+    for c, score in zip(candidates, scores):
+        c["score"] = score
+
+    reranked = sorted(candidates, key=lambda x: x["score"], reverse=True)
+    return reranked[:top_k]
 
 def generate_answer(query, retrieved_chunks):
     context = "\n\n".join([f"[{c['source']}]\n{c['text']}" for c in retrieved_chunks])
@@ -45,9 +69,10 @@ Answer (mention which source(s) you used):"""
     return response.text
 
 def main():
-    print("Loading embedding model and index...")
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    index, chunks, sources = load_index()
+    print("Loading models and index...")
+    embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+    cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    index, chunks, sources, bm25 = load_index()
 
     print("\nReady. Ask a question (or type 'exit' to quit).\n")
     while True:
@@ -55,10 +80,14 @@ def main():
         if query.lower() == "exit":
             break
 
-        retrieved = retrieve(query, model, index, chunks, sources)
-        print("\nRetrieved from:", [r["source"] for r in retrieved])
+        candidates = hybrid_retrieve(query, embed_model, index, chunks, sources, bm25)
+        reranked = rerank(query, candidates, cross_encoder)
 
-        answer = generate_answer(query, retrieved)
+        print("\nTop sources after re-ranking:")
+        for r in reranked:
+            print(f"  {r['source']} (score: {r['score']:.3f})")
+
+        answer = generate_answer(query, reranked)
         print(f"\nAnswer:\n{answer}\n")
         print("-" * 60)
 
