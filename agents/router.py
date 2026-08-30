@@ -1,11 +1,13 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from google import genai
 from dotenv import load_dotenv
 from research_agent import run_research_agent
 from summarizer_agent import run_summarizer_agent
+from utils.logger import log_step
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
@@ -24,19 +26,29 @@ Category:"""
 
     response = client.models.generate_content(model="gemini-3.6-flash", contents=prompt)
     category = response.text.strip().upper()
+    log_step("ROUTER_CLASSIFY", f"query='{query}' -> category={category}")
     return category
 
 def route(query):
+    log_step("QUERY_RECEIVED", f"query='{query}'")
     category = classify_query(query)
     print(f"[Router] Classified as: {category}")
 
     if category == "RESEARCH":
-        return run_research_agent(query)
+        log_step("DISPATCH", "-> research_agent")
+        result = run_research_agent(query)
+        log_step("RESEARCH_RESULT", f"sources={result.get('sources', [])}")
+        return result
     elif category == "SUMMARIZE":
-        return run_summarizer_agent(query)
+        log_step("DISPATCH", "-> summarizer_agent")
+        result = run_summarizer_agent(query)
+        log_step("SUMMARIZE_RESULT", "done")
+        return result
     elif category == "DATA":
+        log_step("DISPATCH", "-> data_agent (not implemented)")
         return {"answer": "Data agent not implemented yet — coming in Week 3."}
     else:
+        log_step("DISPATCH_FALLBACK", f"unrecognized category={category}, defaulting to research")
         return {"answer": f"Could not classify query (got: {category}). Defaulting to research agent.", **run_research_agent(query)}
 
 def main():
