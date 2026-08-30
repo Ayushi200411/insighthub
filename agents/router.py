@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from research_agent import run_research_agent
 from summarizer_agent import run_summarizer_agent
 from utils.logger import log_step
+from data_agent import run_data_agent
 
 load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
@@ -45,8 +46,10 @@ def route(query):
         log_step("SUMMARIZE_RESULT", "done")
         return result
     elif category == "DATA":
-        log_step("DISPATCH", "-> data_agent (not implemented)")
-        return {"answer": "Data agent not implemented yet — coming in Week 3."}
+        log_step("DISPATCH", "-> data_agent")
+        result = run_data_agent("data/titanic.csv", "Survived")
+        log_step("DATA_RESULT", "done")
+        return result
     else:
         log_step("DISPATCH_FALLBACK", f"unrecognized category={category}, defaulting to research")
         return {"answer": f"Could not classify query (got: {category}). Defaulting to research agent.", **run_research_agent(query)}
