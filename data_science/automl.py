@@ -50,9 +50,11 @@ def prepare_features(df, target_col):
 def run_automl(csv_path, target_col):
     df = pd.read_csv(csv_path)
 
-    if target_col not in df.columns:
+    column_lookup = {col.lower(): col for col in df.columns}
+    if target_col.lower() in column_lookup:
+        target_col = column_lookup[target_col.lower()]
+    else:
         return {"error": f"Column '{target_col}' not found. Available columns: {list(df.columns)}"}
-
     task_type = detect_task_type(df, target_col)
     X, y, dropped_cols = prepare_features(df, target_col)
 
