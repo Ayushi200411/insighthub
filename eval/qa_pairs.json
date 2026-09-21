@@ -1,0 +1,102 @@
+[
+  {
+    "question": "What sensors are fused for AUV alignment and calibration?",
+    "expected_answer": "INS (inertial navigation system) and DVL (Doppler velocity log)",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What does DVL stand for?",
+    "expected_answer": "Doppler velocity log",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What two stages make up the DVL initialization pipeline?",
+    "expected_answer": "Alignment (estimating rotation between INS and DVL frames) and calibration (estimating DVL error terms like scale factor and bias)",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What are the two neural networks proposed in this AUV paper, and what does each do?",
+    "expected_answer": "ResAlignNet handles alignment (estimates rotation between INS and DVL frames); DCNet handles calibration (estimates DVL scale factor and bias)",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "How much data does the proposed neural pipeline need for initialization?",
+    "expected_answer": "25 seconds",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "By how much did the proposed pipeline reduce velocity RMSE compared to the model-based baseline?",
+    "expected_answer": "68.7% on average (from 0.5768 m/s to 0.1803 m/s)",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What dataset was used to validate the AUV pipeline?",
+    "expected_answer": "The A-KIT dataset, using six trajectories totaling 33 minutes of real-world sea trial data",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What did the ablation study show about which stage (alignment vs calibration) matters more?",
+    "expected_answer": "Alignment is the dominant error source \u2014 ResAlignNet alone already reduces VRMSE far below baseline; adding DCNet gives only a modest further 2.2% improvement",
+    "source_doc": "2608.22496v1.pdf"
+  },
+  {
+    "question": "What is a proprioceptive hinge used for in flapping-wing robots?",
+    "expected_answer": "Measuring the passive wing pitch angle, and enabling collision detection when the wing strikes an object",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What does the proprioceptive actuator measure in the flapping-wing robot?",
+    "expected_answer": "The active stroke angle (driven by the piezoelectric bending actuator)",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What material is used as the sensing layer in the proprioceptive sensors?",
+    "expected_answer": "PVDF (polyvinylidene fluoride), a piezoelectric thin film",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What sensors did prior flapping-wing robots rely on before this proprioceptive approach?",
+    "expected_answer": "Off-board optical tracking cameras / external motion capture infrastructure",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What was the RMSE for stroke angle tracking, and for pitch angle tracking, in the relevant frequency range?",
+    "expected_answer": "0.44\u00b0 RMSE for stroke amplitude; 2.44\u00b0 RMSE for pitch amplitude (110-190 Hz range)",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What is asynchronous flapping, and why might it help efficiency?",
+    "expected_answer": "A form of closed-loop stroke control where wingbeat frequency is not synchronized to a periodic input signal (like flies/bees vs moths/butterflies); hypothesized to increase adaptability and efficiency",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What is the total mass of the flapping-wing robot platform?",
+    "expected_answer": "128 mg",
+    "source_doc": "2608.21699v1.pdf"
+  },
+  {
+    "question": "What is the IMU used for in this Kalman filtering paper?",
+    "expected_answer": "Providing high-frequency motion information, integrated with other sensors like GNSS, LiDAR, camera, and DVL for navigation",
+    "source_doc": "2608.21433v1.pdf"
+  },
+  {
+    "question": "Why is tuning IMU parameters in a Kalman filter described as 'tricky'?",
+    "expected_answer": "Because the IMU's real working condition is more complex than the stationary calibration scenario \u2014 noise/bias instability calibrated under static conditions doesn't accommodate other conditions",
+    "source_doc": "2608.21433v1.pdf"
+  },
+  {
+    "question": "What statistical tool is used to quantify IMU noise specifications in this paper?",
+    "expected_answer": "Allan variance",
+    "source_doc": "2608.21433v1.pdf"
+  },
+  {
+    "question": "What two open-source systems were used to test the IMU parameter tuning approach?",
+    "expected_answer": "KF-GINS (for INS/GNSS fusion) and FAST-LIO2 (for LiDAR-inertial odometry)",
+    "source_doc": "2608.21433v1.pdf"
+  },
+  {
+    "question": "What conference was the IMU/Kalman filtering paper submitted to?",
+    "expected_answer": "2026 International Conference on Guidance, Navigation and Control",
+    "source_doc": "2608.21433v1.pdf"
+  }
+]

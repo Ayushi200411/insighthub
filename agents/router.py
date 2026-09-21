@@ -25,7 +25,7 @@ Query: {query}
 
 Category:"""
 
-    response = client.models.generate_content(model="gemini-3.6-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-3.1-flash-lite", contents=prompt)
     category = response.text.strip().upper()
     log_step("ROUTER_CLASSIFY", f"query='{query}' -> category={category}")
     return category

@@ -67,5 +67,5 @@ Question: {query}
 
 Answer (mention which source(s) you used):"""
 
-    response = client.models.generate_content(model="gemini-3.6-flash", contents=prompt)
+    response = client.models.generate_content(model="gemini-3.1-flash-lite", contents=prompt)
     return {"answer": response.text, "sources": [c["source"] for c in reranked]}

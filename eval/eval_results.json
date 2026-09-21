@@ -1,0 +1,222 @@
+[
+  {
+    "question": "What sensors are fused for AUV alignment and calibration?",
+    "expected": "INS (inertial navigation system) and DVL (Doppler velocity log)",
+    "system_answer": "The sensors fused for AUV alignment and calibration are the Inertial Navigation System (INS) and the Doppler Velocity Log (DVL).\n\nSource: [2608.22496v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 2)",
+      "2608.22496v1.pdf (chunk 8)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What does DVL stand for?",
+    "expected": "Doppler velocity log",
+    "system_answer": "DVL stands for Doppler velocity log.\n\nSource: [2608.22496v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 3)",
+      "2608.22496v1.pdf (chunk 4)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What two stages make up the DVL initialization pipeline?",
+    "expected": "Alignment (estimating rotation between INS and DVL frames) and calibration (estimating DVL error terms like scale factor and bias)",
+    "system_answer": "The two stages that make up the DVL initialization pipeline are **alignment** (which estimates the rotation between the INS and DVL frames) and **calibration** (which estimates the DVL error terms, such as scale factors and bias).\n\nSources: [2608.22496v1.pdf (chunk 1)] and [2608.22496v1.pdf (chunk 4)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 4)",
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 6)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What are the two neural networks proposed in this AUV paper, and what does each do?",
+    "expected": "ResAlignNet handles alignment (estimates rotation between INS and DVL frames); DCNet handles calibration (estimates DVL scale factor and bias)",
+    "system_answer": "Based on the provided context, the two neural networks proposed in the paper are:\n\n*   **ResAlignNet:** It solves the alignment stage by directly regressing the alignment angles (specifically the Euler angles that define the rotation matrix between the body and DVL frames) from synchronized INS and DVL velocity windows.\n*   **DCNet:** It solves the calibration stage by estimating the DVL error terms (the scale factor and bias vectors).\n\nThese details are found in chunks [1], [2], and [3].",
+    "sources": [
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 2)",
+      "2608.22496v1.pdf (chunk 3)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "How much data does the proposed neural pipeline need for initialization?",
+    "expected": "25 seconds",
+    "system_answer": "The proposed neural pipeline needs 25 seconds of data for initialization.\n\nSources: [2608.22496v1.pdf (chunk 6)], [2608.22496v1.pdf (chunk 1)], and [2608.22496v1.pdf (chunk 5)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 6)",
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 5)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "By how much did the proposed pipeline reduce velocity RMSE compared to the model-based baseline?",
+    "expected": "68.7% on average (from 0.5768 m/s to 0.1803 m/s)",
+    "system_answer": "The proposed pipeline reduced the average velocity root mean squared error (VRMSE) by 68.7% compared to the model-based baseline.\n\nSource: [2608.22496v1.pdf (chunk 6)] and [2608.22496v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 6)",
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 5)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What dataset was used to validate the AUV pipeline?",
+    "expected": "The A-KIT dataset, using six trajectories totaling 33 minutes of real-world sea trial data",
+    "system_answer": "The dataset used to validate the AUV pipeline was real-world data recorded from the Snapir AUV.\n\n(Source: [2608.22496v1.pdf (chunk 6)])",
+    "sources": [
+      "2608.22496v1.pdf (chunk 1)",
+      "2608.22496v1.pdf (chunk 6)",
+      "2608.22496v1.pdf (chunk 5)"
+    ],
+    "grade": "wrong"
+  },
+  {
+    "question": "What did the ablation study show about which stage (alignment vs calibration) matters more?",
+    "expected": "Alignment is the dominant error source \u2014 ResAlignNet alone already reduces VRMSE far below baseline; adding DCNet gives only a modest further 2.2% improvement",
+    "system_answer": "The ablation study showed that the alignment stage is the dominant factor in DVL initialization. Comparing the ResAlignNet-only results with the full ResAlignNet+DCNet pipeline revealed that the alignment stage alone reduces the VRMSE far below the baseline, while the calibration stage (DCNet) provides only a \"modest refinement\" of about 2.2% on average. This indicates that once alignment is accurate, the residual DVL scale and bias errors are small.\n\nSource: [2608.22496v1.pdf (chunk 5), 2608.22496v1.pdf (chunk 6)]",
+    "sources": [
+      "2608.22496v1.pdf (chunk 2)",
+      "2608.22496v1.pdf (chunk 5)",
+      "2608.22496v1.pdf (chunk 6)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What is a proprioceptive hinge used for in flapping-wing robots?",
+    "expected": "Measuring the passive wing pitch angle, and enabling collision detection when the wing strikes an object",
+    "system_answer": "In flapping-wing robots, a proprioceptive hinge is used for collision detection, which reduces the chance of permanent damage if the robot\u2019s wing collides with an object.\n\nSource: [2608.21699v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.21699v1.pdf (chunk 1)",
+      "2608.21699v1.pdf (chunk 2)",
+      "2608.21699v1.pdf (chunk 11)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What does the proprioceptive actuator measure in the flapping-wing robot?",
+    "expected": "The active stroke angle (driven by the piezoelectric bending actuator)",
+    "system_answer": "The proprioceptive actuator measures the active stroke angle of the flapping-wing robot.\n\nSources: [2608.21699v1.pdf (chunk 1)], [2608.21699v1.pdf (chunk 2)], and [2608.21699v1.pdf (chunk 10)]",
+    "sources": [
+      "2608.21699v1.pdf (chunk 2)",
+      "2608.21699v1.pdf (chunk 1)",
+      "2608.21699v1.pdf (chunk 10)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What material is used as the sensing layer in the proprioceptive sensors?",
+    "expected": "PVDF (polyvinylidene fluoride), a piezoelectric thin film",
+    "system_answer": "The material used as the sensing layer in the proprioceptive sensors is PVDF (polyvinylidene fluoride).\n\nSource: [2608.21699v1.pdf (chunk 4)] and [2608.21699v1.pdf (chunk 5)]",
+    "sources": [
+      "2608.21699v1.pdf (chunk 4)",
+      "2608.21699v1.pdf (chunk 5)",
+      "2608.21699v1.pdf (chunk 10)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What sensors did prior flapping-wing robots rely on before this proprioceptive approach?",
+    "expected": "Off-board optical tracking cameras / external motion capture infrastructure",
+    "system_answer": "Prior to the development of this proprioceptive approach, flapping-wing insect-scale aerial vehicles commonly relied on external motion capture or other off-board infrastructure for state estimation and control.\n\nSource: [2608.21699v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.21699v1.pdf (chunk 1)",
+      "2608.21699v1.pdf (chunk 2)",
+      "2608.21699v1.pdf (chunk 11)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What was the RMSE for stroke angle tracking, and for pitch angle tracking, in the relevant frequency range?",
+    "expected": "0.44\u00b0 RMSE for stroke amplitude; 2.44\u00b0 RMSE for pitch amplitude (110-190 Hz range)",
+    "system_answer": "Based on the provided context:\n\n*   **Stroke angle tracking RMSE:** The RMSE for the proprioceptive actuator (stroke angle) is **0.44\u00b0** (Source: Chunk 7).\n*   **Pitch angle tracking RMSE:** In the dynamic range of interest (100\u2013190 Hz), the RMSE for the proprioceptive wing (pitch angle) is **3.93\u00b0** (Source: Chunk 8).",
+    "sources": [
+      "2608.21699v1.pdf (chunk 8)",
+      "2608.21699v1.pdf (chunk 9)",
+      "2608.21699v1.pdf (chunk 7)"
+    ],
+    "grade": "partial"
+  },
+  {
+    "question": "What is asynchronous flapping, and why might it help efficiency?",
+    "expected": "A form of closed-loop stroke control where wingbeat frequency is not synchronized to a periodic input signal (like flies/bees vs moths/butterflies); hypothesized to increase adaptability and efficiency",
+    "system_answer": "Based on the provided context, asynchronous flapping is a form of closed-loop stroke control that is enabled by the proprioceptive actuator (Source: [chunk 1], [chunk 2]).\n\nWhile the text does not explicitly define the mechanics of asynchronous flapping, it notes that asynchronous flapping is \"hypothesized to increase adaptability and efficiency in insects and robots alike\" (Source: [chunk 1]).",
+    "sources": [
+      "2608.21699v1.pdf (chunk 1)",
+      "2608.21699v1.pdf (chunk 11)",
+      "2608.21699v1.pdf (chunk 2)"
+    ],
+    "grade": "partial"
+  },
+  {
+    "question": "What is the total mass of the flapping-wing robot platform?",
+    "expected": "128 mg",
+    "system_answer": "The provided context does not state the total mass of the flapping-wing robot platform.",
+    "sources": [
+      "2608.21699v1.pdf (chunk 2)",
+      "2608.21699v1.pdf (chunk 1)",
+      "2608.21699v1.pdf (chunk 11)"
+    ],
+    "grade": "wrong"
+  },
+  {
+    "question": "What is the IMU used for in this Kalman filtering paper?",
+    "expected": "Providing high-frequency motion information, integrated with other sensors like GNSS, LiDAR, camera, and DVL for navigation",
+    "system_answer": "According to the provided text, the IMU is used to provide high-frequency motion information which is pivotal in integrating other sensors\u2019 measurements (such as GNSS, LiDAR, camera, and DVL) because it is independent of exterior measurements.\n\nSources: [2608.21433v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.21433v1.pdf (chunk 1)",
+      "2608.21433v1.pdf (chunk 2)",
+      "2608.21433v1.pdf (chunk 9)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "Why is tuning IMU parameters in a Kalman filter described as 'tricky'?",
+    "expected": "Because the IMU's real working condition is more complex than the stationary calibration scenario \u2014 noise/bias instability calibrated under static conditions doesn't accommodate other conditions",
+    "system_answer": "The tuning of IMU parameters is described as \"tricky\" because the IMU's working conditions are more complex than the stationary calibration scenario. Consequently, the noises and bias instabilities calibrated under static conditions cannot accommodate other cases, meaning effective tuning relies heavily on the user's experience or a profound understanding of the system.\n\nSource: [2608.21433v1.pdf (chunk 1)]",
+    "sources": [
+      "2608.21433v1.pdf (chunk 1)",
+      "2608.21433v1.pdf (chunk 2)",
+      "2608.21433v1.pdf (chunk 7)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What statistical tool is used to quantify IMU noise specifications in this paper?",
+    "expected": "Allan variance",
+    "system_answer": "The statistical tool used to quantify IMU noise specifications in this paper is the **Allan variance**.\n\n(Source: [2608.21433v1.pdf (chunk 1)] and [2608.21433v1.pdf (chunk 2)])",
+    "sources": [
+      "2608.21433v1.pdf (chunk 2)",
+      "2608.21433v1.pdf (chunk 1)",
+      "2608.21433v1.pdf (chunk 7)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What two open-source systems were used to test the IMU parameter tuning approach?",
+    "expected": "KF-GINS (for INS/GNSS fusion) and FAST-LIO2 (for LiDAR-inertial odometry)",
+    "system_answer": "The two open-source systems used to test the IMU parameter tuning approach are KF-GINS and FASTLIO2.\n\nSource: [2608.21433v1.pdf (chunk 7)]",
+    "sources": [
+      "2608.21433v1.pdf (chunk 7)",
+      "2608.21433v1.pdf (chunk 2)",
+      "2608.21433v1.pdf (chunk 1)"
+    ],
+    "grade": "correct"
+  },
+  {
+    "question": "What conference was the IMU/Kalman filtering paper submitted to?",
+    "expected": "2026 International Conference on Guidance, Navigation and Control",
+    "system_answer": "The provided context does not state what conference the paper was submitted to.",
+    "sources": [
+      "2608.21433v1.pdf (chunk 1)",
+      "2608.21433v1.pdf (chunk 9)",
+      "2608.21433v1.pdf (chunk 2)"
+    ],
+    "grade": "wrong"
+  }
+]
